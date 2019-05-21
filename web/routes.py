@@ -15,6 +15,10 @@ def allowed_file(filename):
 	return "." in filename and \
 		filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSION
 
+def check_folder_exist(directory):
+	if not os.path.exists(directory):
+		os.makedirs(directory)
+
 @web.route('/upload')
 def upload():
 	return render_template('upload.html', title='Upload Audio')
@@ -28,8 +32,9 @@ def upload_file():
 		if file.filename == '':
 			return 'File not selected'
 		if file and allowed_file(file.filename):
+			check_folder_exist(os.path.join(web.config['UPLOAD_FOLDER']))
 			filename = secure_filename(file.filename)
 			file.save(os.path.join(web.config['UPLOAD_FOLDER'], filename))
-			return "File Uploaded Successfully"
+			return "File successfully uploaded"
 		else:
 			return "File not supported"
