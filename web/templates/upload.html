@@ -1,8 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form action="http://localhost:5000/upload_file" method="POST" enctype="multipart/form-data">
-    <input type="file" name="file" id="file">
-    <input type="submit" name="submit" id="" value="Upload">
-</form>
+<div class="row justify-content-center">
+    <div class="row">
+        <form action="http://localhost:5000/upload_file" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                Upload your audio
+            </div>
+            <div class="row">
+                <div class="custom-file">
+                    <input type="file" name="file" id="file" class="inputfile">
+                </div>
+            </div>
+            <div class="row">
+                <div class="custom-submit" style="margin-top:50px;">
+                    <input type="submit" name="submit" id="" class="btn btn-primary custom-btn" value="Process Audio">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
