@@ -223,4 +223,7 @@ pip-selfcheck.json
 # Ignore all local history of files
 .history
 
+### File
+.wav
+
 # End of https://www.gitignore.io/api/flask,python,virtualenv
