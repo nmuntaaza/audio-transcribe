@@ -25,6 +25,7 @@ import subprocess
 from datetime import timedelta as td
 from pyAudioAnalysis import audioSegmentation as aS
 from IPython.display import Audio
+from scipy.signal import butter, lfilter
 ```
 
 ```{python}
@@ -33,6 +34,39 @@ def convert_audio(old_audio, new_audio):
     # -y digunakan untuk auto replace audio ketika convert dengan nama yang sama
     cmds = ['ffmpeg', '-hide_banner', '-loglevel', 'panic', '-y', '-i', old_audio, new_audio]
     subprocess.Popen(cmds)
+    
+convert_audio("uploaded_file/Sampel2.wav", "uploaded_file/Sampel22.wav")
+```
+
+```{python}
+# ls uploaded_file/
+```
+
+```{python}
+def butter_bandpass_filter(data, lowcut, highcut, fs, order=1):
+    nyq = 0.5 * fs
+    low = lowcut / nyq
+    high = highcut / nyq
+    
+    b, a = butter(order, [low, high], btype='band')
+    y = lfilter(b, a, data)
+    
+    return y
+```
+
+```{python}
+def test_band_pass():
+    
+    lowcut = 85
+    highcut = 255
+    
+    audio, sr = librosa.load("uploaded_file/Sampel22.wav", sr=None)
+    
+    filtered_audio = butter_bandpass_filter(audio, lowcut, highcut, sr)
+    librosa.output.write_wav("uploaded_file/Sampel222.wav", filtered_audio, sr, norm=False)
+    
+test_band_pass()
+    
 ```
 
 ```{python colab={}, colab_type=code, id=4ZY-3Vt33rrE}
