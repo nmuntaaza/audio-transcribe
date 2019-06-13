@@ -1,0 +1,318 @@
+---
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.0'
+      jupytext_version: 1.0.3
+  kernelspec:
+    display_name: audiotranscribe
+    language: python
+    name: audiotranscribe
+---
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 353}, colab_type=code, id=DgYXebJ5OKhi, outputId=d55acda9-9f68-43e1-ebae-10649aebd3e1}
+import librosa
+import librosa.display
+import matplotlib.pyplot as plt
+import numpy as np
+import math
+import scipy
+import IPython
+import time
+import subprocess
+from datetime import timedelta as td
+from pyAudioAnalysis import audioSegmentation as aS
+from IPython.display import Audio
+from scipy.signal import butter, lfilter
+```
+
+```{python}
+def convert_audio(old_audio, new_audio):
+    # -hide_banner, -loglevel panic digunakan untuk menghilangkan keluaran ketika process convert
+    # -y digunakan untuk auto replace audio ketika convert dengan nama yang sama
+    cmds = ['ffmpeg', '-hide_banner', '-loglevel', 'panic', '-y', '-i', old_audio, new_audio]
+    subprocess.Popen(cmds)
+```
+
+```{python}
+def butter_bandpass_filter(data, lowcut, highcut, fs, order=1):
+    nyq = 0.5 * fs
+    low = lowcut / nyq
+    high = highcut / nyq
+    
+    b, a = butter(order, [low, high], btype='band')
+    y = lfilter(b, a, data)
+    
+    return y
+```
+
+```{python}
+def test_band_pass():
+    
+    lowcut = 85
+    highcut = 255
+    
+    audio, sr = librosa.load("uploaded_file/Sampel22.wav", sr=None)
+    
+    filtered_audio = butter_bandpass_filter(audio, lowcut, highcut, sr)
+    librosa.output.write_wav("uploaded_file/Sampel222.wav", filtered_audio, sr, norm=False)
+    
+test_band_pass()
+    
+```
+
+```{python colab={}, colab_type=code, id=4ZY-3Vt33rrE}
+def _stft(y, n_fft, hop_length, win_length):
+    return librosa.stft(y=y, n_fft=n_fft, hop_length=hop_length, win_length=win_length)
+def _istft(y, hop_length, win_length):
+    return librosa.istft(y, hop_length, win_length)
+def _amp_to_db(x):
+    return librosa.core.amplitude_to_db(x, ref=1.0, amin=1e-20, top_db=80.0)
+def _db_to_amp(x,):
+    return librosa.core.db_to_amplitude(x,ref=1.0)
+def plot_spectrogram(signal, title):
+    fig, ax = plt.subplots(figsize=(20,4))
+    cax = ax.matshow(signal, origin = 'lower', aspect='auto', cmap=plt.cm.seismic, vmin=-1*np.max(np.abs(signal)), vmax=np.max(np.abs(signal)))
+    fig.colorbar(cax)
+    ax.set_title(title)
+    plt.tight_layout()
+    plt.show()
+    
+def plot_statistics_and_filter(mean_freq_noise, std_freq_noise, noise_thresh, smoothing_filter):
+    fig, ax = plt.subplots(ncols=2, figsize=(20,4))
+    plt_mean, = ax[0].plot(mean_freq_noise, label='Mean power of noise')
+    plt_std, = ax[0].plot(std_freq_noise, label='Std. power of noise')
+    plt_std, = ax[0].plot(noise_thresh, label='Noise threshold (by frequency)')
+    ax[0].set_title('Threshold for mask')
+    ax[0].legend()
+    cax = ax[1].matshow(smoothing_filter, origin = 'lower')
+    fig.colorbar(cax)
+    ax[1].set_title('Filter for smoothing Mask')
+    plt.show()
+    
+def removeNoise(audio_clip, noise_clip, n_grad_freq=2, n_grad_time=4, n_fft=4096, win_length=2048, hop_length=512, n_std_thresh=1.5, prop_decrease=1.0, verbose=False, visual=False):
+    """Remove noise from audio based upon a clip containing only noise
+
+    Args:
+        audio_clip (array): The first parameter.
+        noise_clip (array): The second parameter.
+        n_grad_freq (int): how many frequency channels to smooth over with the mask.
+        n_grad_time (int): how many time channels to smooth over with the mask.
+        n_fft (int): number audio of frames between STFT columns.
+        win_length (int): Each frame of audio is windowed by `window()`. The window will be of length `win_length` and then padded with zeros to match `n_fft`..
+        hop_length (int):number audio of frames between STFT columns.
+        n_std_thresh (int): how many standard deviations louder than the mean dB of the noise (at each frequency level) to be considered signal
+        prop_decrease (float): To what extent should you decrease noise (1 = all, 0 = none)
+        visual (bool): Whether to plot the steps of the algorithm
+
+    Returns:
+        array: The recovered signal with noise subtracted
+
+    """
+    if verbose: start = time.time()
+    # STFT over noise
+    # STFT pada noise
+    noise_stft = _stft(noise_clip, n_fft, hop_length, win_length) 
+    noise_stft_db = _amp_to_db(np.abs(noise_stft))# convert ke dB
+    # Menghitung statistik pada noise
+    mean_freq_noise = np.mean(noise_stft_db, axis =1)
+    std_freq_noise = np.std(noise_stft_db, axis =1)
+    noise_thresh = mean_freq_noise+std_freq_noise*n_std_thresh
+    if verbose: print('STFT on noise:', td(seconds=time.time()-start)); start = time.time()
+    # STFT pada sinyal audio
+    if verbose: start = time.time()
+    sig_stft = _stft(audio_clip, n_fft, hop_length, win_length)
+    sig_stft_db = _amp_to_db(np.abs(sig_stft))
+    if verbose: print('STFT on signal:',td(seconds=time.time()-start)); start = time.time()
+    # Menghitung nilai masing pada desibel
+    mask_gain_dB = np.min(_amp_to_db(np.abs(sig_stft)))
+    print(noise_thresh, mask_gain_dB)
+    # Membuat filter smoothing untuk masking pada waktu dan frekuensi
+    smoothing_filter = np.outer(np.concatenate([np.linspace(0,1,n_grad_freq+1,endpoint=False),np.linspace(1,0,n_grad_freq+2)])[1:-1], 
+                       np.concatenate([np.linspace(0,1,n_grad_time+1,endpoint=False),np.linspace(1,0,n_grad_time+2)])[1:-1])
+    smoothing_filter = smoothing_filter/np.sum(smoothing_filter)
+    # Menghitung threshold pada setiap frekuensi/time bin
+    db_thresh = np.repeat(np.reshape(noise_thresh, [1,len(mean_freq_noise)]), np.shape(sig_stft_db)[1], axis = 0).T
+    # Mask apabila sinyal diatas nilai threshold
+    sig_mask = sig_stft_db<db_thresh
+    if verbose: print('Masking:', td(seconds=time.time()-start)); start = time.time()
+    # Convolce mask dengan smoothing filter
+    sig_mask = scipy.signal.fftconvolve(sig_mask, smoothing_filter,  mode='same')
+    sig_mask = sig_mask*prop_decrease
+    if verbose: print('Mask convolution:', td(seconds=time.time()-start)); start = time.time()
+    # Mask sinyal audio
+    sig_stft_db_masked = sig_stft_db *(1-sig_mask) + np.ones(np.shape(mask_gain_dB))*mask_gain_dB*sig_mask # mask real
+    sig_imag_masked = np.imag(sig_stft)*(1-sig_mask)
+    sig_stft_amp = ((_db_to_amp(sig_stft_db_masked)*np.sign(sig_stft))+(1j * sig_imag_masked) )
+    if verbose: print('Mask application:', td(seconds=time.time()-start)); start = time.time()
+    # Mengembalikan sinyal audio kedalam bentuk time series
+    recovered_signal = _istft(sig_stft_amp, hop_length, win_length)
+    recovered_spec = _amp_to_db(np.abs(_stft(recovered_signal, n_fft, hop_length, win_length)))
+    if verbose: print('Signal recovery:', td(seconds=time.time()-start));
+    if visual: plot_spectrogram(noise_stft_db, title='Noise')
+    if visual: plot_statistics_and_filter(mean_freq_noise, std_freq_noise, noise_thresh, smoothing_filter)
+    if visual: plot_spectrogram(sig_stft_db, title='Signal')
+    if visual: plot_spectrogram(sig_mask, title='Mask applied')
+    if visual: plot_spectrogram(sig_stft_db_masked, title='Masked signal')
+    if visual: plot_spectrogram(recovered_spec, title='Recovered spectrogram')
+    return recovered_signal
+
+"""
+Deskripsi: 
+    Function untuk mengambil noise dari audio.
+    
+Parameter:
+    Audio(Array):
+        
+    timeStart(Float):
+        
+    timeEnd(Float):
+        
+    sr(int):
+
+Return:
+    Noise(Array):
+        
+"""
+def getNoise(audio,timeStart,timeEnd,sr = 44100):
+    #noise,sr = librosa.load(audio, sr=44100)
+    noise = audio[int(sr*timeStart):int(sr*timeEnd)]
+    return noise
+```
+
+```{python colab={}, colab_type=code, id=gHMJAf9-3ufi}
+"""
+Load Audio:
+
+Parameter:
+  PathAudio (String)
+  SampleRate (Optional - integer)
+  
+Output:
+  Audio (Array)
+  SampleRate (integer)
+  
+"""
+audio,sr = librosa.load("../Resources/phone.wav")
+
+"""
+Get Noise:
+
+Parameter:
+  Audio(Array):
+  timeStart(Float):
+  timeEnd(Float):
+  sr(int):
+
+Output:
+  Noise(Array):
+"""
+n_audio = getNoise(audio,2.6,3.8)
+
+"""
+Remove Noise:
+
+Parameter:
+  OriginalAudio (Array):
+  NoiseAudio (Array)
+
+Output:
+  FilteredAudio (Array):
+"""
+#f_audio = removeNoise(audio,n_audio)
+
+"""
+Speaker Diarization:
+
+Parameter:
+  Audio (Array):
+  SampleRate (integer)
+  Number_of_Speaker (integer; Maks 10)
+  Draw_Plot_Chart (Boolean)
+
+Output:
+  Label_Speaker (Array)
+"""
+diarization = aS.speakerDiarization(audio, sr, 2, plot_res=True)
+```
+
+```{python colab={}, colab_type=code, id=8M544VtD35F6}
+"""
+Mengambil Label pada 0.2 detik pertama
+"""
+first = diarization[0]
+print("Speaker: {}, len : {}".format(diarization,len(diarization)))
+"""
+time: Variabel untuk menunjukan panjang/lama satu bagian pembicaraan
+first_time: Variabel untuk menunjukan kapan perubahan speaker terjadi
+"""
+time = 0.0
+first_time = 0.0
+"""
+nol: Variabel untuk menampung audio speaker 1
+one: Variabel untuk menampung audio speaker 2
+"""
+nol = []
+one = []
+
+"Melakukan Looping selama ada data label didalam variabel diarization"
+for i in diarization:
+    "Jika Label pada i belum mengalami perubahan label maka tambahkan panjang pembicaraan label i sepanjang 0.2 detik"
+    if i == first:
+        time += 0.2
+    else:
+        "Audio_Clip: Variabel untuk menampung potongan audio dengan start time (first_time) dan end time (time)"
+        audio_clip = audio[int(sr*first_time):int(sr*time)]
+        
+        "Jika Speaker yang berbicara speaker 1 (0)"
+        if int(i) < 1:
+            #Jika Label Speaker 0
+            "Memasukan Potongan Audio kedalam Array Nol dengan waktu yang sama"
+            nol[int(sr*first_time):int(sr*time)] = audio_clip
+            "Memasukan nilai 0 pada array one dengan waktu yang sama"
+            one[int(sr*first_time):int(sr*time)] = [0 for k in range(int(sr*time) - int(sr*first_time))]
+            "Jika Speaker yang berbicara speaker 2 (1)"
+        else:
+            #Jika Label Speaker 1
+            "Memasukan Potongan Audio kedalam Array one dengan waktu yang sama"
+            one[int(sr*first_time):int(sr*time)] = audio_clip
+            "Memasukan nilai 0 pada array nol dengan waktu yang sama"
+            nol[int(sr*first_time):int(sr*time)] = [0 for k in range(int(sr*time) - int(sr*first_time))]
+            
+        print("Speaker: {}".format(i))
+        print("Timestamp: {}-{}".format(first_time, time))
+        print("")
+        "Mengubah first_time menjadi time"
+        first_time = time
+        "Mengubah nilai label first menjadi label selanjutnya pada array diarization"
+        first = i
+        "memasukan label speaker pembicara terakhir"
+        last_speaker = i
+
+#Proses Pemisahan Label Terakhir
+audio_clip = audio[int(sr*first_time):int(sr*time)]
+if int(last_speaker) < 1:
+    nol[int(sr*first_time):int(sr*time)] = audio_clip
+    one[int(sr*first_time):int(sr*time)] = [0 for k in range(int(sr*time) - int(sr*first_time))]
+else:
+    one[int(sr*first_time):int(sr*time)] = audio_clip
+    nol[int(sr*first_time):int(sr*time)] = [0 for k in range(int(sr*time) - int(sr*first_time))]
+```
+
+## Hasil Audio Speaker 1
+
+```{python}
+IPython.display.Audio(data=nol, rate=sr)
+```
+
+## Hasil Audio Speaker 2
+
+```{python}
+IPython.display.Audio(data=one, rate=sr)
+```
+
+```{python}
+
+```
