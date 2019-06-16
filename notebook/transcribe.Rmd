@@ -42,8 +42,6 @@ def convert_audio(old_audio, new_audio):
     
     return True
 
-# Not yet finnished
-# Cant overwrite
 def convert_audio_2(in_file, out_file):
     process = (
         ffmpeg
@@ -61,7 +59,7 @@ def convert_audio_2(in_file, out_file):
 ```
 
 ```{python}
-convert_audio('../uploaded_file/Sampel1_dari_librosa.wav', '../uploaded_file/Sampel1_fmpeg_default.wav')
+convert_audio('../uploaded_file/Sampel1.wav', '../uploaded_file/Sampel1_pcm_s16be.wav')
 ```
 
 ```{python}

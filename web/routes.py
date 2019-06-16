@@ -1,10 +1,11 @@
 import os
 from werkzeug.utils import secure_filename
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, current_app
 from web import web
 from web.forms import AudioForm
 from web.transcribe import audio_segmentation
 from web import utils
+from web.transcribe import transcribe
 
 @web.route('/')
 def upload():
@@ -22,17 +23,27 @@ def upload_file():
 			flash("File not selected", "error")
 			return redirect('/')
 		if file and utils.allowed_file(file.filename):
-			utils.check_folder_exist(os.path.join(web.config['UPLOAD_FOLDER']))
-			filename = secure_filename(file.filename)
-			file.save(os.path.join(web.config['UPLOAD_FOLDER'], filename))
-			flash("File successfully uploaded", "success")
-			return redirect('/')
+			noise_start = request.form.get('noise_start')
+			noise_end = request.form.get('noise_end')
+			if noise_start and noise_end:
+				utils.check_folder_exist(os.path.join(web.config['UPLOAD_FOLDER']))
+				filename = secure_filename(file.filename)
+				file.save(os.path.join(web.config['UPLOAD_FOLDER'], filename))
+				# Dilakukan proses transcribe
+				# Nanti step nya mau gimana?
+				# Apa processing nya ada di view? kalau ga gimana biar viewnya biar bisa real time update
+				# Apa mending outputnya disimpen di session
+				# Redirect atau render_template
+				if transcribe.transcribe(filename, noise_start, noise_end):
+					flash("File successfully uploaded", "success")
+					flash("File successfully trancribed", "success")
+				else:
+					flash("File successfully uploaded", "success")
+					flash("File unsuccessfully trancribed", "error")
+				return redirect('/')
+			else:
+				flash("Noise start time and end time must be inputed", "error")
+				return redirect('/')
 		else:
 			flash("File not supported, please upload wav file", "error")
 			return redirect('/')
-
-
-@web.route('/test')
-def test():
-	test = audio_segmentation.test()
-	return render_template('test.html', test=test)
