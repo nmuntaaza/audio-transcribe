@@ -1,15 +1,14 @@
 import os
 from werkzeug.utils import secure_filename
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 from web import web
 from web.forms import AudioForm
 
 ALLOWED_EXTENSION = set(['wav'])
 
 @web.route('/')
-@web.route('/index')
 def index():
-	return "Hello World"
+	return redirect(url_for('upload'))
 
 def allowed_file(filename):
 	return "." in filename and \

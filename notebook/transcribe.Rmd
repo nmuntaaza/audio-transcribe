@@ -33,9 +33,17 @@ from scipy.signal import butter, lfilter
 def convert_audio(old_audio, new_audio):
     # -hide_banner, -loglevel panic digunakan untuk menghilangkan keluaran ketika process convert
     # -y digunakan untuk auto replace audio ketika convert dengan nama yang sama
-    cmds = ['ffmpeg', '-hide_banner', '-loglevel', 'panic', '-y', '-i', old_audio, new_audio]
-    subprocess.Popen(cmds)
+    commands = ['ffmpeg', '-hide_banner', '-loglevel', 'panic', '-y', '-i', old_audio, new_audio]
+    try:
+        subprocess.check_call(commands)
+    except subprocess.CalledProcessError as error:
+        print(error)
+        return False
+    
+    return True
 
+# Not yet finnished
+# Cant overwrite
 def convert_audio_2(in_file, out_file):
     process = (
         ffmpeg
@@ -53,7 +61,7 @@ def convert_audio_2(in_file, out_file):
 ```
 
 ```{python}
-convert_audio_2('../uploaded_file/Sampel22.wav', '../uploaded_file/Sampel222.wav')
+convert_audio('../uploaded_file/Sampel1_dari_librosa.wav', '../uploaded_file/Sampel1_fmpeg_default.wav')
 ```
 
 ```{python}
