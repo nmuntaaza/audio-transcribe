@@ -4,23 +4,28 @@ from flask import render_template, request, redirect, url_for
 from web import web
 from web.forms import AudioForm
 
-ALLOWED_EXTENSION = set(['wav'])
+ALLOWED_EXTENSION = ['wav']
+
 
 @web.route('/')
 def index():
 	return redirect(url_for('upload'))
 
+
 def allowed_file(filename):
 	return "." in filename and \
 		filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSION
+
 
 def check_folder_exist(directory):
 	if not os.path.exists(directory):
 		os.makedirs(directory)
 
+
 @web.route('/upload')
 def upload():
 	return render_template('upload.html', title='Upload Audio')
+
 
 @web.route('/upload_file', methods=['GET','POST'])
 def upload_file():
