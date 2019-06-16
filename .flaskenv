@@ -1,2 +1,1 @@
 FLASK_APP=audio_transcribe.py
-FLASK_ENV=development

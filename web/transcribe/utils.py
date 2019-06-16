@@ -38,23 +38,3 @@ def convert_audio(in_file, out_file):
         return False
     
     return True
-
-
-def get_noise(audio, start_time, end_time, sr=8000):
-    """
-    Mengambil bagian audio dari waktu start_time sampai end_time
-    
-    Parameter
-    ----------
-    audio : numpy array
-        array sinyal audio
-    start_time : int
-        waktu awal noise pada audio
-    end_time : int
-        waktu akhir noise pada audio
-    sr : int
-        samplerate dari audio
-    """
-    noise = audio[int(sr*start_time):int(sr*end_time)]
-    
-    return noise

@@ -3,7 +3,7 @@ import librosa
 import time
 import scipy.signal
 from datetime import timedelta as td
-from scipy.io import wavfile
+from scipy.signal import butter, lfilter
 from pysndfx import AudioEffectsChain
 
 class NoiseReduction:
@@ -50,7 +50,8 @@ class NoiseReduction:
             menampilkan plot dari algoritma
         """
 
-        if verbose: start = time.time()
+        if verbose:
+            start = time.time()
 
         # STFT pada noise
         noise_stft = self._stft(noise_clip, n_fft, hop_length, win_length)
@@ -66,7 +67,8 @@ class NoiseReduction:
             start = time.time()
 
         # STFT pada sinyal audio
-        if verbose: start = time.time()
+        if verbose:
+            start = time.time()
 
         sig_stft = self._stft(audio_clip, n_fft, hop_length, win_length)
         sig_stft_db = self._amp_to_db(np.abs(sig_stft))
@@ -148,3 +150,48 @@ class NoiseReduction:
         audio_clean = less_noise(audio)
 
         return audio_clean
+
+    def butter_bandpass_filter(self, audio, low_cut, high_cut, sr, order=1):
+        """
+        Band pass filter
+
+        Parameter
+        ----------
+        audio : numpy array
+            array sinyal audio
+        sr : int
+            samplerate dari audio
+        low_cut : int
+            threshold bawah
+        high_cut : int
+            threshold atas
+        order : int
+            roll off band pass
+        """
+        nyq = 0.5 * sr
+        low = low_cut / nyq
+        high = high_cut / nyq
+
+        b, a = butter(order, [low, high], btype='band')
+        y = lfilter(b, a, audio)
+
+        return y
+
+    def get_noise(audio, start_time, end_time, sr=8000):
+        """
+        Mengambil bagian audio dari waktu start_time sampai end_time
+
+        Parameter
+        ----------
+        audio : numpy array
+            array sinyal audio
+        start_time : int
+            waktu awal noise pada audio
+        end_time : int
+            waktu akhir noise pada audio
+        sr : int
+            samplerate dari audio
+        """
+        noise = audio[int(sr * start_time):int(sr * end_time)]
+
+        return noise
