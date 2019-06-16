@@ -1,6 +1,7 @@
 import librosa
 import subprocess
 
+
 def trim_silence(audio):
     """
     Menghilangkan silence noise dari audio
@@ -14,6 +15,7 @@ def trim_silence(audio):
     trimmed_length = librosa.get_duration(audio) - librosa.get_duration(audio_trimmed)
 
     return audio_trimmed, trimmed_length
+
 
 def convert_audio(in_file, out_file):
     """
@@ -37,6 +39,7 @@ def convert_audio(in_file, out_file):
     
     return True
 
+
 def get_noise(audio, start_time, end_time, sr=8000):
     """
     Mengambil bagian audio dari waktu start_time sampai end_time
@@ -55,4 +58,3 @@ def get_noise(audio, start_time, end_time, sr=8000):
     noise = audio[int(sr*start_time):int(sr*end_time)]
     
     return noise
-    

@@ -24,9 +24,9 @@ class NoiseReduction:
         
         return librosa.core.db_to_amplitude(x, ref=1.0)
 
-    def remove_noise(self, audio_clip, noise_clip, n_grad_freq=2, n_grad_time=4, \
-        n_fft=2048, win_length=2048, hop_length=512, n_std_thresh=1.5, \
-        prop_decrease=1.0, verbose=False, visual=False, debug=False):
+    def remove_noise(self, audio_clip, noise_clip, n_grad_freq=2, n_grad_time=4,
+                     n_fft=2048, win_length=2048, hop_length=512, n_std_thresh=1.5,
+                     prop_decrease=1.0, verbose=False, visual=False, debug=False):
         """
         Menghilangkan noise dari audio berdasarkan clip audio yang memiliki noisi
         
@@ -126,17 +126,25 @@ class NoiseReduction:
 
         return recovered_signal
 
-    def reduce_noise_power(self, y, sr):
-        """
-        Comment
-        """
-        cent = librosa.feature.spectral_centroid(y, sr)
 
-        threshold_l = round(np.median(cent))*0.1
-        threshold_h = round(np.median(cent))*1.5
+    def reduce_noise_power(self, audio, sr):
+        """
+        Mengurangi power pada audio
+
+        Parameter
+        ----------
+        audio : numpy array
+            array sinyal audio
+        sr : int
+            samplerate dari audio
+        """
+        cent = librosa.feature.spectral_centroid(audio, sr)
+
+        threshold_l = np.round(np.median(cent))*0.1
+        threshold_h = np.round(np.median(cent))*1.5
 
         less_noise = AudioEffectsChain().lowshelf(gain=-30.0, frequency=threshold_l, slope=0.8) \
-            .highshelf(gain=-12.0, frequency=threshold_h, slope=0.5)#.limiter(gain=6.0)
-        y_clean = less_noise(y)
+            .highshelf(gain=-12.0, frequency=threshold_h, slope=0.5)
+        audio_clean = less_noise(audio)
 
-        return y_clean
+        return audio_clean

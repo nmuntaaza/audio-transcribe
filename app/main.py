@@ -1,8 +1,8 @@
-from audio_processing import noise_reduction as nr
-from audio_processing import noise_generator as ng
-from audio_processing import util as apu
 import librosa
 import numpy as np
+from . import noise_reduction as nr
+from . import noise_generator as ng
+from . import utils as apu
 
 
 def main():
