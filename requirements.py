@@ -5,8 +5,10 @@ Click==7.0
 cycler==0.10.0
 decorator==4.4.0
 eyeD3==0.8.10
+ffmpeg-python==0.1.18
 Flask==1.0.2
 Flask-WTF==0.14.2
+future==0.17.1
 hmmlearn==0.2.2
 ipykernel==5.1.1
 ipython==7.5.0
@@ -29,10 +31,11 @@ pexpect==4.7.0
 pickleshare==0.7.5
 prompt-toolkit==2.0.9
 ptyprocess==0.6.0
--e git+https://github.com/tyiannak/pyAudioAnalysis.git@e3da991e7247492deba50648a4c7c0f41e684af4#egg=pyAudioAnalysis
+-e git+git@github.com:nmuntaaza/audio_separation.git@60d7b83e6ee66b700722162b2b9ff3eb316f0a9f#egg=pyAudioAnalysis&subdirectory=libs/pyAudioAnalysis
 pydub==0.23.1
 Pygments==2.4.2
 pyparsing==2.4.0
+pysndfx==0.3.6
 python-dateutil==2.8.0
 python-dotenv==0.10.2
 python-magic==0.4.15
