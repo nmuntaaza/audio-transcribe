@@ -41,7 +41,7 @@ def remove_noise(audio_clip, noise_clip, n_grad_freq=2, n_grad_time=4,
     hop_length : int
         Jumlah frame audio diantara kolom STFT
     n_std_thresh : float
-        berapa banyak standar deviasi lebih keras dari nilai rata-rate desibel dari noise (pada setiap level frekuensi) yang dianggap sebagai sinyal
+        berapa banyak stax`ndar deviasi lebih keras dari nilai rata-rate desibel dari noise (pada setiap level frekuensi) yang dianggap sebagai sinyal
     prop_decrease : float
         sejauh mana noise dikurangi (1 = all. 0 = none)
     visual : bool
