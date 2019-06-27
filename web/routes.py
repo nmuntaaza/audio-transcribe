@@ -23,8 +23,8 @@ def upload_file():
 			flash("File not selected", "error")
 			return redirect('/')
 		if file and utils.allowed_file(file.filename):
-			noise_start = request.form.get('noise_start')
-			noise_end = request.form.get('noise_end')
+			noise_start = float(request.form.get('noise_start'))
+			noise_end = float(request.form.get('noise_end'))
 			if noise_start and noise_end:
 				utils.check_folder_exist(os.path.join(web.config['UPLOAD_FOLDER']))
 				filename = secure_filename(file.filename)
@@ -34,7 +34,7 @@ def upload_file():
 				# Apa processing nya ada di view? kalau ga gimana biar viewnya biar bisa real time update
 				# Apa mending outputnya disimpen di session
 				# Redirect atau render_template
-				if transcribe.transcribe(filename, noise_start, noise_end):
+				if transcribe.transcribe(filename, noise_start, noise_end, verbose=True):
 					flash("File successfully uploaded", "success")
 					flash("File successfully trancribed", "success")
 				else:

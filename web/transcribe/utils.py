@@ -34,7 +34,7 @@ def convert_audio(in_file, out_file):
     # -y digunakan untuk auto replace audio ketika convert dengan nama yang sama
     try:
         subprocess.check_call(commands)
-    except subprocess.CalledProcessError:
+    except subprocess.CalledProcessError as error:
         return False
     
     return True

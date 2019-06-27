@@ -217,29 +217,33 @@ def getNoise(audio, timeStart, timeEnd, sr):
 ```
 
 ```{python}
-audio_path = "../uploaded_file/Sampel6_2.wav"
+audio_path = "../uploaded_file/Sampel6.wav"
 ```
 
 ```{python}
 # Test band pass
-convert_audio(audio_path, '../uploaded_file/coverted.wav')
+convert_audio(audio_path, "../uploaded_file/coverted.wav")
 ```
 
 ```{python colab={}, colab_type=code, id=gHMJAf9-3ufi}
 # Input audio, load audio
-audio, sr = librosa.load(audio_path, sr=None)
+try:
+    audio, sr = librosa.load(audio_path, sr=None)
 
-lowcut = 85
-highcut = 255
+    lowcut = 85
+    highcut = 255
 
-# Melakukan Proses Bandpass Filter
-filtered_audio = butter_bandpass_filter(audio, lowcut, highcut, sr)
+    # Melakukan Proses Bandpass Filter
+    filtered_audio = butter_bandpass_filter(audio, lowcut, highcut, sr)
 
-# Pengambilan clip noise dari audio
-noise_audio = getNoise(filtered_audio, 12.204, 18.538, sr)
+    # Pengambilan clip noise dari audio
+    noise_audio = getNoise(filtered_audio, 12.204, 18.538, sr)
+    print(noise_audio)
 
-# Proses noise reduction
-reduced_audio = removeNoise(filtered_audio, noise_audio)
+    # Proses noise reduction
+    reduced_audio = removeNoise(filtered_audio, noise_audio)
+except ValueError as err:
+    print(err)
 ```
 
 ```{python}
@@ -266,9 +270,9 @@ nol = []
 one = []
 
 "Melakukan Looping selama ada data label didalam variabel diarization"
-for i in diarization:
+for index, i in enumerate(diarization):
     "Jika Label pada i belum mengalami perubahan label maka tambahkan panjang pembicaraan label i sepanjang 0.2 detik"
-    if i == first:
+    if i == first and index < (len(diarization))-1:
         time += 0.2
     else:
         "Audio_Clip: Variabel untuk menampung potongan audio dengan start time (first_time) dan end time (time)"
@@ -289,7 +293,7 @@ for i in diarization:
             "Memasukan nilai 0 pada array nol dengan waktu yang sama"
             nol[int(sr*first_time):int(sr*time)] = [0 for k in range(int(sr*time) - int(sr*first_time))]
             
-        print("Speaker: {}".format(i))
+        print("Speaker: {}".format(first))
         print("Timestamp: {}-{}".format(first_time, time))
         print("")
         "Mengubah first_time menjadi time"
