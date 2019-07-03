@@ -3,7 +3,6 @@ from werkzeug.utils import secure_filename
 from flask import render_template, request, redirect, url_for, flash, current_app
 from web import web
 from web.forms import AudioForm
-from web.transcribe import audio_segmentation
 from web import utils
 from web.transcribe import transcribe
 

@@ -4,22 +4,24 @@ import time
 import scipy.signal
 from datetime import timedelta as td
 from scipy.signal import butter, lfilter
-    
+import matplotlib.pyplot as plt
+
+
 def _stft(y, n_fft, hop_length, win_length):
-    
     return librosa.stft(y=y, n_fft=n_fft, hop_length=hop_length, win_length=win_length)
 
+
 def _istft(y, hop_length, win_length):
-    
     return librosa.istft(y, hop_length, win_length)
 
+
 def _amp_to_db(x):
-    
     return librosa.core.amplitude_to_db(x, ref=1.0, amin=1e-20, top_db=80.0)
 
+
 def _db_to_amp(x,):
-    
     return librosa.core.db_to_amplitude(x,ref=1.0)
+
 
 def plot_spectrogram(signal, title):
     fig, ax = plt.subplots(figsize=(20,4))
@@ -28,7 +30,8 @@ def plot_spectrogram(signal, title):
     ax.set_title(title)
     plt.tight_layout()
     plt.show()
-    
+
+
 def plot_statistics_and_filter(mean_freq_noise, std_freq_noise, noise_thresh, smoothing_filter):
     fig, ax = plt.subplots(ncols=2, figsize=(20,4))
     plt_mean, = ax[0].plot(mean_freq_noise, label='Mean power of noise')
@@ -40,7 +43,8 @@ def plot_statistics_and_filter(mean_freq_noise, std_freq_noise, noise_thresh, sm
     fig.colorbar(cax)
     ax[1].set_title('Filter for smoothing Mask')
     plt.show()
-    
+
+
 def remove_noise(audio_clip, noise_clip, n_grad_freq=2, n_grad_time=4, n_fft=4096, win_length=2048, hop_length=512, n_std_thresh=1.5, prop_decrease=1.0, verbose=False, visual=False):
     """
     Menghilangkan noise dari audio berdasarkan clip audio yang memiliki noisi
@@ -128,6 +132,7 @@ def remove_noise(audio_clip, noise_clip, n_grad_freq=2, n_grad_time=4, n_fft=409
     if visual: plot_spectrogram(recovered_spec, title='Recovered spectrogram')
     
     return recovered_signal
+
 
 def butter_bandpass_filter(audio, low_cut, high_cut, sr, order=1):
     """

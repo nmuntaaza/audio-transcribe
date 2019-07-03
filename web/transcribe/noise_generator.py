@@ -20,6 +20,7 @@ def fftnoise(self, f):
 
     return np.fft.ifft(f).real
 
+
 def band_limiter_noise(self, samplerate, samples, min_freq=4000, max_freq=12000):
     """
     Comment
