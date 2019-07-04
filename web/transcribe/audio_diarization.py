@@ -1,6 +1,7 @@
 from pyAudioAnalysis import audioSegmentation as aS
 
-def audio_diarization(audio, sr, num_speaker, verbose=False):
+
+def audio_diarization(audio, sr, number_of_speaker, verbose=False):
     
     time = 0.0
     first_time = 0.0
@@ -8,18 +9,19 @@ def audio_diarization(audio, sr, num_speaker, verbose=False):
     one = []
     speaker_speech = []
     
-    diarization = aS.speakerDiarization(reduced_audio, sr, 2, plot_res=False)
+    diarization = aS.speakerDiarization(audio, sr, number_of_speaker, plot_res=False)
     # Mengambil Label pada 0.2 detik pertama
     first = diarization[0]
     
-    if verbose: print("Speaker: {}, len : {}".format(diarization,len(diarization)))
+    if verbose:
+        print("Speaker: {}, len : {}".format(diarization,len(diarization)))
 
     for index, i in enumerate(diarization):
         if i == first and index < (len(diarization))-1:
             time += 0.2
         else:
             audio_clip = audio[int(sr*first_time):int(sr*time)]
-            
+
             if int(i) < 1:
                 # Jika Label Speaker 0
                 nol[int(sr*first_time):int(sr*time)] = audio_clip
