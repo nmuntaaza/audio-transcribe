@@ -27,9 +27,10 @@ def upload_file():
 			noise_end = float(request.form.get('noise_end'))
 			if noise_start and noise_end:
 				utils.create_folder_if_not_exist(os.path.join(web.config['UPLOAD_FOLDER']))
+				print(os.path.join(web.config['UPLOAD_FOLDER']))
 				filename = secure_filename(file.filename)
 				file.save(os.path.join(web.config['UPLOAD_FOLDER'], filename))
-				if transcribe.transcribe(filename, noise_start, noise_end, verbose=True):
+				if transcribe.transcribe(filename, noise_start, noise_end, verbose=False):
 					flash("File successfully uploaded", "success")
 					flash("File successfully trancribed", "success")
 				else:
