@@ -6,6 +6,7 @@ from web.forms import AudioForm
 from web import utils
 from web.transcribe import transcribe
 
+
 @web.route('/')
 def upload():
 	return render_template('upload.html', title='Upload Audio')
