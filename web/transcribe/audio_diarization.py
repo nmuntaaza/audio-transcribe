@@ -53,4 +53,4 @@ def audio_diarization(audio, sr, number_of_speaker, verbose=False):
     speaker_speech.append(nol)
     speaker_speech.append(one)
     
-    return speaker_speech
+    return nol, one
