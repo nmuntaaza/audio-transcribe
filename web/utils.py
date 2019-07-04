@@ -7,6 +7,6 @@ def allowed_file(filename):
            filename.rsplit(".", 1)[1].lower() in current_app.config['ALLOWED_EXTENSION']
 
 
-def check_folder_exist(directory):
-    if not os.path.exists(directory):
+def create_folder_if_not_exist(directory):
+    if not os.path.isdir(directory):
         os.makedirs(directory)

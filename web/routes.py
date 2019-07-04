@@ -26,14 +26,9 @@ def upload_file():
 			noise_start = float(request.form.get('noise_start'))
 			noise_end = float(request.form.get('noise_end'))
 			if noise_start and noise_end:
-				utils.check_folder_exist(os.path.join(web.config['UPLOAD_FOLDER']))
+				utils.create_folder_if_not_exist(os.path.join(web.config['UPLOAD_FOLDER']))
 				filename = secure_filename(file.filename)
 				file.save(os.path.join(web.config['UPLOAD_FOLDER'], filename))
-				# Dilakukan proses transcribe
-				# Nanti step nya mau gimana?
-				# Apa processing nya ada di view? kalau ga gimana biar viewnya biar bisa real time update
-				# Apa mending outputnya disimpen di session
-				# Redirect atau render_template
 				if transcribe.transcribe(filename, noise_start, noise_end, verbose=True):
 					flash("File successfully uploaded", "success")
 					flash("File successfully trancribed", "success")
@@ -42,7 +37,7 @@ def upload_file():
 					flash("File unsuccessfully trancribed", "error")
 				return redirect('/')
 			else:
-				flash("Noise start time and end time must be inputed", "error")
+				flash("Noise start time and end time must be given", "error")
 				return redirect('/')
 		else:
 			flash("File not supported, please upload wav file", "error")

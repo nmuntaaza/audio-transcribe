@@ -1,5 +1,86 @@
 import librosa
 import subprocess
+import numpy as np
+import uuid
+import scipy.io.wavfile as scipywav
+import io
+import os
+from web.utils import create_folder_if_not_exist
+
+
+def remove_file(path):
+    """
+        Deskripsi: Function untuk menghapus file
+
+        Parameter:
+            path: String
+
+        Output:
+
+    """
+    if os.path.isdir(path):
+        os.remove(path)
+
+
+def read_audio_binary(path):
+    """
+        Deskripsi: Function untuk membaca file .wav dalam bentuk binary
+
+        Parameter:
+            path: String
+
+        Output:
+            content: String
+    """
+    with io.open(path, 'rb') as audio_file:
+        content = audio_file.read()
+    return content
+
+
+def write_to_wav(audio, sr):
+    """
+        Deskripsi: Function untuk menyimpan data array audio kedalam file wav
+
+        Parameter:
+            audio: Numpy array
+            sr: integer
+
+        Output:
+            tempid: String
+    """
+    temp_id = uuid.uuid4().hex[:10].upper()
+
+    np_audio = np.array(audio)
+
+    audio_pcm = float_to_pcm(audio=np_audio)
+
+    create_folder_if_not_exist('../wavtemp')
+    scipywav.write("../wavtemp/{}.wav".format(temp_id), sr, audio_pcm)
+
+    return temp_id
+
+
+def float_to_pcm(audio):
+    """
+        Deskripsi: Function untuk merubah isi data array audio dari bentuk float kedalam bentuk int16
+
+        Parameter:
+            audio: Numpy array
+
+        Output:
+            audio: Numpy array
+    """
+    float_limit = 1.414
+    int_limit = 32767
+
+    with np.nditer(audio, op_flags=['readwrite']) as x:
+        for i in x:
+            i /= float_limit
+            i *= int_limit
+
+    audio_pcm = audio.astype(np.int16)
+
+    return audio_pcm
 
 
 def trim_silence(audio):
