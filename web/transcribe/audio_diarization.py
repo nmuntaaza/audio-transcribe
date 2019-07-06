@@ -7,7 +7,6 @@ def audio_diarization(audio, sr, number_of_speaker, verbose=False):
     first_time = 0.0
     nol = []
     one = []
-    speaker_speech = []
     
     diarization = aS.speakerDiarization(audio, sr, number_of_speaker, plot_res=False)
     # Mengambil Label pada 0.2 detik pertama
@@ -34,7 +33,7 @@ def audio_diarization(audio, sr, number_of_speaker, verbose=False):
             if verbose:
                 print("Speaker: {}".format(first))
                 print("Timestamp: {}-{}".format(first_time, time))
-                print("")    
+                print("")
             
             first_time = time
             first = i
@@ -49,8 +48,5 @@ def audio_diarization(audio, sr, number_of_speaker, verbose=False):
     else:
         one[int(sr*first_time):int(sr*time)] = audio_clip
         nol[int(sr*first_time):int(sr*time)] = [0 for k in range(int(sr*time) - int(sr*first_time))]
-        
-    speaker_speech.append(nol)
-    speaker_speech.append(one)
     
     return nol, one

@@ -35,7 +35,6 @@ def transcribe(audio_file_name, noise_start_time=1, noise_end_time=3, verbose=Fa
         # Masing-masing speech disimpan dulu pada storage untuk digunakan saat conver_to_binary
         one_temp_filename = apu.write_to_wav(speaker_speech_1, audio_samplerate)
         two_temp_filename = apu.write_to_wav(speaker_speech_2, audio_samplerate)
-        print(one_temp_filename, two_temp_filename)
 
         path_audio_one = f"{current_app.config['TEMP_FOLDER']}{one_temp_filename}.wav"
         path_audio_two = f"{current_app.config['TEMP_FOLDER']}{two_temp_filename}.wav"
@@ -58,9 +57,10 @@ def transcribe(audio_file_name, noise_start_time=1, noise_end_time=3, verbose=Fa
         transcript_two = stt.process_transcript(response_transcribe_two, 2)
 
         transcript_dialog = stt.sort_transcript(transcript_one, transcript_two)
+        generated_dialogue = stt.generate_dialogue(transcript_dialog)
         print(f"Transcript One {transcript_one}")
         print(f"Transcript Two {transcript_two}")
-        print(stt.generate_dialogue(transcript_dialog))
+        print(f"Generated Dialogue {generated_dialogue}")
 
     except ValueError as err:
         print(err)
