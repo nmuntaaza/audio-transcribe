@@ -11,9 +11,6 @@ def upload_to_bucket(blob_name, path_to_file, bucket_name):
     # Explicitly use service account credentials by specifying the private key
     # file.
     storage_client = storage.Client()
-
-    #print(buckets = list(storage_client.list_buckets())
-
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(blob_name)
     blob.upload_from_filename(path_to_file)
@@ -31,7 +28,6 @@ def transcribe_audio(path):
         Output:
             response: array
     """
-    # content = readbinaudio(path)
     client = speech.SpeechClient()
     audio = types.RecognitionAudio(uri=path)
 
