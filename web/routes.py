@@ -8,9 +8,8 @@ from web.transcribe import transcribe
 
 
 @web.route('/')
-def upload():
-	return render_template('upload.html', title='Upload Audio')
-
+def home():
+	return render_template('template.html', title='Audio Transcribe')
 
 @web.route('/upload_file', methods=['POST'])
 def upload_file():
