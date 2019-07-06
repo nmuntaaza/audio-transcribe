@@ -12,7 +12,6 @@ if os.path.exists(credential_path) and \
         os.path.isfile(credential_path):
     abs_credential_path = os.path.abspath(credential_path)
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = abs_credential_path
-    print(abs_credential_path)
 
 # import routes from app package
 from web import routes

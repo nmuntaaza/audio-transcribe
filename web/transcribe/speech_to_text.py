@@ -18,7 +18,6 @@ def upload_to_bucket(blob_name, path_to_file, bucket_name):
     blob = bucket.blob(blob_name)
     blob.upload_from_filename(path_to_file)
 
-    #returns a public url
     return blob.public_url
 
 
@@ -44,9 +43,6 @@ def transcribe_audio(path):
     operation = client.long_running_recognize(config, audio)
 
     response = operation.result(timeout=90)
-
-    for result in response.results:
-        print('Transcript: {}'.format(result.alternatives[0].transcript))
 
     return response
 
@@ -79,9 +75,9 @@ def sort_transcript(transcript1, transcript2):
     transcript = transcript1
     transcript.extend(transcript2)
 
-    sortedTranscript = sorted(transcript, key=itemgetter('start_time'), reverse=False)
+    sorted_transcript = sorted(transcript, key=itemgetter('start_time'), reverse=False)
 
-    return sortedTranscript
+    return sorted_transcript
 
 
 def generate_dialogue(transcript):
