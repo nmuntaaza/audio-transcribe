@@ -2,7 +2,6 @@ import os
 from werkzeug.utils import secure_filename
 from flask import render_template, request, redirect, url_for, flash, current_app
 from web import web
-from web.forms import AudioForm
 from web import utils
 from web.transcribe import transcribe
 
@@ -10,6 +9,7 @@ from web.transcribe import transcribe
 @web.route('/')
 def home():
 	return render_template('template.html', title='Audio Transcribe')
+
 
 @web.route('/upload_file', methods=['POST'])
 def upload_file():
@@ -29,9 +29,11 @@ def upload_file():
 				print(os.path.join(web.config['UPLOAD_FOLDER']))
 				filename = secure_filename(file.filename)
 				file.save(os.path.join(web.config['UPLOAD_FOLDER'], filename))
-				if transcribe.transcribe(filename, noise_start, noise_end, verbose=False):
+				generated_dialogue = transcribe.transcribe(filename, noise_start, noise_end, verbose=False)
+				if generated_dialogue:
 					flash("File successfully uploaded", "success")
 					flash("File successfully trancribed", "success")
+					return render_template('template.html', title='Audio Transcribe', generated_dialogue=generated_dialogue)
 				else:
 					flash("File successfully uploaded", "success")
 					flash("File unsuccessfully trancribed", "error")

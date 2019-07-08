@@ -1,10 +1,10 @@
 import librosa
+import time
 from . import noise_reduction as nr
 from . import utils as apu
 from . import audio_diarization as ad
 from . import speech_to_text as stt
 from flask import current_app
-import os
 
 
 def transcribe(audio_file_name, noise_start_time=1, noise_end_time=3, verbose=False):
@@ -58,15 +58,47 @@ def transcribe(audio_file_name, noise_start_time=1, noise_end_time=3, verbose=Fa
 
         transcript_dialog = stt.sort_transcript(transcript_one, transcript_two)
         generated_dialogue = stt.generate_dialogue(transcript_dialog)
-        print(f"Transcript One {transcript_one}")
-        print(f"Transcript Two {transcript_two}")
-        print(f"Generated Dialogue {generated_dialogue}")
 
+        # T1
+        if verbose:
+            print("Structure: ")
+            print(transcript_one[0], "Len: {}".format(len(transcript_one)), end="\n\n")
+            print("Pembicara 1:", end=" ")
+            for word in transcript_one:
+                print(word['word'], end=" ")
+
+            print("Structure: ")
+            print(transcript_two[0], "Len: {}".format(len(transcript_two)), end="\n\n")
+            print("Pembicara 2:", end=" ")
+            for word in transcript_two:
+                print(word['word'], end=" ")
+
+            # Print dict structure
+            print(generated_dialogue[0], end="\n\n")
+
+            print("Dialogue: ")
+            for sentence in generated_dialogue:
+                timestamp = float(sentence['timestamp'])
+                miliseconds = f"{timestamp % 1:.2f}".split(".")[1]
+                print(time.strftime('%H:%M:%S.', time.gmtime(timestamp)) + miliseconds, end=" ")
+                print("Pembicara 1:" if sentence['label'] == 1 else "Pembicara 2:", sentence['sentence'])
+
+        final_dialogue = []
+        for sentence in generated_dialogue:
+            ts = float(sentence['timestamp'])
+            miliseconds = f"{ts % 1:.2f}".split(".")[1]
+            timestamp = time.strftime('%H:%M:%S.', time.gmtime(ts)) + miliseconds
+            dic = {
+                "timestamp": timestamp,
+                "pembicara": sentence['label'],
+                "sentence": sentence['sentence']
+            }
+            final_dialogue.append(dic)
+
+        return final_dialogue
     except ValueError as err:
         print(err)
         return False
-
-    return True
 
 
 def reduce_noise(audio, audio_sr, noise_start_time, noise_end_time):
