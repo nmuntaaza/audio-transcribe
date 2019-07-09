@@ -109,19 +109,6 @@
                                         <label class="custom-file-label" for="file">Choose file</label>
                                     </div>
                                 </div>
-                                <!-- Email -->
-                                <div class="form-row mb-4">
-                                    <div class="col">
-                                        <!-- Start time -->
-                                        <input type="text" class="form-control" placeholder="Noise start time"
-                                               id="noise_start" name="noise_start" required>
-                                    </div>
-                                    <div class="col">
-                                        <!-- End time -->
-                                        <input type="text" class="form-control" placeholder="Noise end time"
-                                               id="noise_end" name="noise_end" required>
-                                    </div>
-                                </div>
                                 <button class="btn btn-info btn-block" type="submit" name="submit">Upload</button>
                             </form>
                         </div>
@@ -137,15 +124,15 @@
                         <div class="block-grey scrollbar" id="step-transcript">
                             <table>
                                 {% for word in generated_dialogue %}
-                                <tr>
-                                    <td>{{ word['timestamp'] }}</td>
-                                    {% if word['pembicara'] == 1 %}
-                                        <td class="font-weight-m width-td">Pembicara 1</td>
-                                    {% else %}
-                                        <td class="font-weight-m width-td">Pembicara 2</td>
-                                    {% endif %}
-                                    <td>{{ word['sentence'] }}</td>
-                                </tr>
+                                    <tr>
+                                        <td>{{ word['timestamp'] }}</td>
+                                        {% if word['pembicara'] == 1 %}
+                                            <td class="font-weight-m width-td">Pembicara 1</td>
+                                        {% else %}
+                                            <td class="font-weight-m width-td">Pembicara 2</td>
+                                        {% endif %}
+                                        <td>{{ word['sentence'] }}</td>
+                                    </tr>
                                 {% endfor %}
                             </table>
                         </div>

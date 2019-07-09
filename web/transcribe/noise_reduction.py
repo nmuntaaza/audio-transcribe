@@ -202,3 +202,35 @@ def get_noise(audio, start_time, end_time, sr=8000):
     noise = audio[int(sr*start_time):int(sr*end_time)]
 
     return noise
+
+
+def check_if_sample_below_threshold(sample, high_threshold, low_threshold):
+    if sample > 0:
+        if sample > low_threshold:
+            if sample > high_threshold:
+                return False
+            else:
+                return True
+        else:
+            return False
+    else:
+        return True
+
+
+def find_noise(audio, sr):
+    high_threshold = 0.09814453125
+    low_threshold = 0.00006713867
+    noise_start_index = -1
+    noise_end_index = -1
+    noise_length_threshold = 0.3
+
+    for i, sample in enumerate(audio):
+        if check_if_sample_below_threshold(sample, high_threshold, low_threshold):
+            if noise_end_index - noise_start_index == sr * noise_length_threshold:
+                return noise_start_index, noise_end_index
+            if noise_start_index == -1:
+                noise_start_index = i
+            noise_end_index = i
+        else:
+            noise_start_index = -1
+    return 0, 0
