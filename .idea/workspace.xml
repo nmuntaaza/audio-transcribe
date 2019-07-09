@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2f54525b-ddaa-4617-b1a3-d729e1cbaddb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebook/transcribe.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebook/transcribe.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/routes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/templates/template.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/templates/template.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/transcribe/transcribe.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/transcribe/transcribe.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,10 +28,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/web/routes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="803">
+            <state relative-caret-position="921">
               <caret line="41" column="37" selection-start-line="41" selection-start-column="37" selection-end-line="41" selection-end-column="37" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
@@ -56,11 +52,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/web/templates/template.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1776">
-              <caret line="74" column="58" selection-start-line="74" selection-start-column="58" selection-end-line="74" selection-end-column="58" />
+            <state relative-caret-position="359">
+              <caret line="74" column="66" selection-start-line="74" selection-start-column="66" selection-end-line="74" selection-end-column="66" />
             </state>
           </provider>
         </entry>
@@ -123,6 +119,7 @@
       <find>self,</find>
       <find>speakerDiarization</find>
       <find>Upload</find>
+      <find>multi</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -154,8 +151,8 @@
         <option value="$PROJECT_DIR$/web/transcribe/audio_diarization.py" />
         <option value="$PROJECT_DIR$/web/templates/upload.html" />
         <option value="$PROJECT_DIR$/web/transcribe/transcribe.py" />
-        <option value="$PROJECT_DIR$/web/templates/template.html" />
         <option value="$PROJECT_DIR$/web/routes.py" />
+        <option value="$PROJECT_DIR$/web/templates/template.html" />
       </list>
     </option>
   </component>
@@ -298,7 +295,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" sideWeight="0.5027523" side_tool="true" weight="0.20597738" />
-      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.4972477" visible="true" weight="0.21567044" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" sideWeight="0.4972477" visible="true" weight="0.21567044" />
       <window_info id="Structure" order="2" sideWeight="0.50086355" side_tool="true" weight="0.26655897" />
       <window_info anchor="bottom" id="Terminal" order="0" sideWeight="0.49919224" weight="0.1985294" />
       <window_info anchor="bottom" id="Event Log" order="1" sideWeight="0.50080776" side_tool="true" weight="0.33914423" />
@@ -560,13 +557,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/templates/template.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1776">
-          <caret line="74" column="58" selection-start-line="74" selection-start-column="58" selection-end-line="74" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/web/transcribe/transcribe.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2184">
@@ -603,11 +593,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/web/routes.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="803">
+        <state relative-caret-position="921">
           <caret line="41" column="37" selection-start-line="41" selection-start-column="37" selection-end-line="41" selection-end-column="37" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/templates/template.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359">
+          <caret line="74" column="66" selection-start-line="74" selection-start-column="66" selection-end-line="74" selection-end-column="66" />
         </state>
       </provider>
     </entry>
