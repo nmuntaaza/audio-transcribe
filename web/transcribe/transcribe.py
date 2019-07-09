@@ -87,7 +87,7 @@ def transcribe(audio_file_name, noise_start_time=1, noise_end_time=3, verbose=Fa
         for sentence in generated_dialogue:
             ts = float(sentence['timestamp'])
             miliseconds = f"{ts % 1:.2f}".split(".")[1]
-            timestamp = time.strftime('%H:%M:%S.', time.gmtime(ts)) + miliseconds
+            timestamp = time.strftime('%M:%S.', time.gmtime(ts)) + miliseconds
             dic = {
                 "timestamp": timestamp,
                 "pembicara": sentence['label'],

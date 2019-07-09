@@ -1,6 +1,6 @@
 import os
 from werkzeug.utils import secure_filename
-from flask import render_template, request, redirect, url_for, flash, current_app
+from flask import render_template, request, redirect, url_for, flash, current_app, session
 from web import web
 from web import utils
 from web.transcribe import transcribe
