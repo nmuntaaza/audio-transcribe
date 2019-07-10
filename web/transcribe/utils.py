@@ -7,6 +7,7 @@ import io
 import os
 from web.utils import create_folder_if_not_exist
 from flask import current_app
+from web import web
 
 
 def clear_folder(folder_name):
@@ -65,7 +66,8 @@ def write_to_wav(audio, sr):
     temp_id = uuid.uuid4().hex[:10].upper()
     np_audio = np.array(audio)
     audio_pcm = float_to_pcm(np_audio)
-    create_folder_if_not_exist('../wavtemp')
+    print(os.path.join(web.config['TEMP_FOLDER']))
+    create_folder_if_not_exist(os.path.join(web.config['TEMP_FOLDER']))
     file_name = f"{current_app.config['TEMP_FOLDER']}{temp_id}.wav"
     scipywav.write(file_name, sr, audio_pcm)
 
