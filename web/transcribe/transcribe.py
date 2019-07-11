@@ -17,49 +17,68 @@ def transcribe(audio_file_name, verbose=False):
 
     try:
         # Filtering
+        if verbose : print("Filtering:", end=" ")
         p_audio = nr.butter_bandpass_filter(audio, 85, 255, audio_samplerate)
         if verbose:
+            print("Done")
             audio_output_path = current_app.config['UPLOAD_FOLDER'] + "filtered_" + audio_file_name
             librosa.output.write_wav(audio_output_path, p_audio, audio_samplerate, norm=False)
 
         # Reduction
-        if (noise_start_time > 0 and noise_end_time > 0) and (noise_start_time > noise_end_time):
+        if (noise_start_time >= 0 and noise_end_time > 0) and (noise_start_time < noise_end_time):
+            if verbose: print("Noise Reduction:", end=" ")
             p_audio = reduce_noise(p_audio, audio_samplerate, noise_start_time, noise_end_time)
             if verbose:
+                print("Done")
                 audio_output_path = current_app.config['UPLOAD_FOLDER'] + "reduced_" + audio_file_name
                 librosa.output.write_wav(audio_output_path, p_audio, audio_samplerate, norm=False)
         
         # #audio, time_trimmed = apu.trim_silence(audio)
 
         # Diarization
-        speaker_speech_1, speaker_speech_2 = ad.audio_diarization(p_audio, audio_samplerate, 2, False)
+        if verbose: print("Audio Diarization:", end=" ")
+        speaker_speech_1, speaker_speech_2 = ad.audio_diarization(p_audio, audio_samplerate, 2, verbose)
+        print("Done")
 
         # Masing-masing speech disimpan dulu pada storage untuk digunakan saat conver_to_binary
+        if verbose: print("Writing temp wav:", end=" ")
         one_temp_filename = apu.write_to_wav(speaker_speech_1, audio_samplerate)
         two_temp_filename = apu.write_to_wav(speaker_speech_2, audio_samplerate)
+        if verbose: print("Done")
 
         path_audio_one = f"{current_app.config['TEMP_FOLDER']}{one_temp_filename}.wav"
         path_audio_two = f"{current_app.config['TEMP_FOLDER']}{two_temp_filename}.wav"
         one_blob_filename = f"tempfile/{one_temp_filename}.wav"
         two_blob_filename = f"tempfile/{two_temp_filename}.wav"
 
+        if verbose: print("Uploading to bucket:", end=" ")
         bucket_one = stt.upload_to_bucket(one_blob_filename, path_audio_one, "kota-108")
         bucket_two = stt.upload_to_bucket(two_blob_filename, path_audio_two, "kota-108")
+        if verbose: print("Done")
 
-        apu.clear_folder(current_app.config['TEMP_FOLDER'])
+        if verbose: print("Clearing wav temp:", end=" ")
+        clear_folder = apu.clear_folder(current_app.config['TEMP_FOLDER'])
+        clear_folder = apu.clear_folder(current_app.config['UPLOAD_FOLDER'])
+        if verbose: print("Done")
 
         bucket_one = f"gs://kota-108/tempfile/{one_temp_filename}.wav"
         bucket_two = f"gs://kota-108/tempfile/{two_temp_filename}.wav"
 
         # Transkripsi Speaker 1
+        if verbose: print("Transcribing audio:", end=" ")
         response_transcribe_one = stt.transcribe_audio(bucket_one)
         response_transcribe_two = stt.transcribe_audio(bucket_two)
+        if verbose: print("Done")
 
+        if verbose: print("Generating transcript:", end=" ")
         transcript_one = stt.process_transcript(response_transcribe_one, 1)
         transcript_two = stt.process_transcript(response_transcribe_two, 2)
+        if verbose: print("Done")
 
+        if verbose: print("Generating dialogue:", end=" ")
         transcript_dialog = stt.sort_transcript(transcript_one, transcript_two)
         generated_dialogue = stt.generate_dialogue(transcript_dialog)
+        if verbose: print("Done")
 
         # T1
         if verbose:

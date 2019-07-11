@@ -18,16 +18,34 @@
     <hr>
     <h3>Result</h3>
     <ul>
-        <li></li>
+        <div id="result" class="result"></div>
     </ul>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function () {
-            var filename = "{{ filename }}";
+            var file_name = "{{ filename }}";
             var step = "{{ step }}";
+            var result_data;
+            var html_code = "";
 
+            if (step !== '' && step === 'upload') console.log('Uploading Audio, Please Wait');
             if (step !== '' && step === 'process_audio') {
-                jQuery.getJSON('/process')
+                console.log('Process Audio, Please Wait');
+                $.post('/process', {filename: file_name})
+                    .done(function (result) {
+                        result_data = result;
+                        if (result_data['status'] === 200) {
+                            $.each(result_data['data'], function (index, data) {
+                                html_code += "<li>";
+                                html_code += "[" + data['timestamp'] + "] ";
+                                html_code += ((data['pembicara'] === 1) ? "Pembicara 1: " : "Pembicara 2: ");
+                                html_code += data['sentence'];
+                                html_code += "</li>";
+                                jQuery("#result").append(html_code);
+                                html_code = "";
+                            });
+                        }
+                    });
             }
         });
     </script>
