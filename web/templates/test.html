@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <p>Step : {{ step }}</p>
+    <p>Filename : {{ filename }}</p>
+    <h1>Audio Processing</h1>
+    <form action="/upload_file" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" id="file" aria-describedby="Input Audio">
+        <input type="submit" value="Submit">
+    </form>
+    <hr>
+    <h3>Result</h3>
+    <ul>
+        <div id="result" class="result"></div>
+    </ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            var file_name = "{{ filename }}";
+            var step = "{{ step }}";
+            var result_data;
+            var html_code = "";
+
+            if (step !== '' && step === 'upload') console.log('Uploading Audio, Please Wait');
+            if (step !== '' && step === 'process_audio') {
+                console.log('Process Audio, Please Wait');
+                $.post('/process', {filename: file_name})
+                    .done(function (result) {
+                        result_data = result;
+                        if (result_data['status'] === 200) {
+                            $.each(result_data['data'], function (index, data) {
+                                html_code += "<li>";
+                                html_code += "[" + data['timestamp'] + "] ";
+                                html_code += ((data['pembicara'] === 1) ? "Pembicara 1: " : "Pembicara 2: ");
+                                html_code += data['sentence'];
+                                html_code += "</li>";
+                                jQuery("#result").append(html_code);
+                                html_code = "";
+                            });
+                        }
+                    });
+            }
+        });
+    </script>
+</body>
+</html>

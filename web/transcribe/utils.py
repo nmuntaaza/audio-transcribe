@@ -7,19 +7,30 @@ import io
 import os
 from web.utils import create_folder_if_not_exist
 from flask import current_app
+from web import web
 
 
 def clear_folder(folder_name):
+    """
+    menghapus seluruh file yang terdapat dalam folder
+    :param folder_name: string, path dari folder yang akan di bersihkan
+    :return: boolean
+    """
     for file in os.listdir(folder_name):
         file_path = os.path.join(folder_name, file)
         try:
-            remove_file(file_path)
+            return remove_file(file_path)
         except OSError as e:
             print(f"Error: {e.filename} - {e.strerror}")
             return False
 
 
 def remove_file(path):
+    """
+    Menghapus file
+    :param path: string, path dari file yang akan dihapus
+    :return: boolean
+    """
     """
         Deskripsi: Function untuk menghapus file
 
@@ -31,6 +42,7 @@ def remove_file(path):
     """
     try:
         os.unlink(path)
+        return True
     except OSError as e:
         print(f"Error: {e.filename} - {e.strerror}")
         return False
@@ -65,7 +77,8 @@ def write_to_wav(audio, sr):
     temp_id = uuid.uuid4().hex[:10].upper()
     np_audio = np.array(audio)
     audio_pcm = float_to_pcm(np_audio)
-    create_folder_if_not_exist('../wavtemp')
+    print(os.path.join(web.config['TEMP_FOLDER']))
+    create_folder_if_not_exist(os.path.join(web.config['TEMP_FOLDER']))
     file_name = f"{current_app.config['TEMP_FOLDER']}{temp_id}.wav"
     scipywav.write(file_name, sr, audio_pcm)
 
