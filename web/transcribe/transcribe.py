@@ -117,7 +117,7 @@ def transcribe(audio_file_name, verbose=False):
             final_dialogue.append(dic)
 
         return final_dialogue
-    except ValueError as err:
+    except Exception as err:
         print(err)
         return False
 
