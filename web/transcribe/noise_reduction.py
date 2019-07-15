@@ -112,7 +112,7 @@ def remove_noise(audio_clip, noise_clip, n_grad_freq=2, n_grad_time=4, n_fft=409
     db_thresh = np.repeat(np.reshape(noise_thresh, [1, len(mean_freq_noise)]), np.shape(sig_stft_db)[1], axis=0).T
     
     # Mask apabila sinyal diatas nilai threshold
-    sig_mask = sig_stft_db<db_thresh
+    sig_mask = sig_stft_db < db_thresh
     
     if verbose:
         print('Masking:', td(seconds=time.time()-start))
@@ -157,7 +157,7 @@ def remove_noise(audio_clip, noise_clip, n_grad_freq=2, n_grad_time=4, n_fft=409
     return recovered_signal
 
 
-def butter_bandpass_filter(audio, low_cut, high_cut, sr, order=1):
+def butter_bandpass_filter(audio, sr, low_cut=85, high_cut=255, order=1):
     """
     Band pass filter
 
@@ -218,7 +218,7 @@ def check_if_sample_below_threshold(sample, high_threshold, low_threshold):
 
 
 def find_noise(audio, sr):
-    high_threshold = 0.09814453125
+    high_threshold = 0.0231781005859375
     low_threshold = 0.00006713867
     noise_start_index = -1
     noise_end_index = -1

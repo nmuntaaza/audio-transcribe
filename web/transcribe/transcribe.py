@@ -1,5 +1,6 @@
 import librosa
 import time
+import numpy as np
 from . import noise_reduction as nr
 from . import utils as apu
 from . import audio_diarization as ad
@@ -13,21 +14,24 @@ def transcribe(audio_file_name, verbose=False):
     # Convert file audio dari raw ke wav pcm linear
     apu.convert_audio(audio_path, audio_path)
     audio, audio_samplerate = librosa.load(audio_path, sr=None)
-    noise_start_time, noise_end_time = nr.find_noise(audio, audio_samplerate)
 
     try:
         # Filtering
         if verbose : print("Filtering:", end=" ")
-        p_audio = nr.butter_bandpass_filter(audio, 85, 255, audio_samplerate)
+        p_audio = nr.butter_bandpass_filter(audio, audio_samplerate)
         if verbose:
             print("Done")
             audio_output_path = current_app.config['UPLOAD_FOLDER'] + "filtered_" + audio_file_name
             librosa.output.write_wav(audio_output_path, p_audio, audio_samplerate, norm=False)
 
         # Reduction
-        if (noise_start_time >= 0 and noise_end_time > 0) and (noise_start_time < noise_end_time):
+        noise_start_time, noise_end_time = nr.find_noise(p_audio, audio_samplerate)
+        if 0 <= noise_start_time < noise_end_time:
             if verbose: print("Noise Reduction:", end=" ")
-            p_audio = reduce_noise(p_audio, audio_samplerate, noise_start_time, noise_end_time)
+            p_audio = reduce_noise(p_audio,
+                                   audio_samplerate,
+                                   noise_start_time/audio_samplerate,
+                                   noise_end_time/audio_samplerate)
             if verbose:
                 print("Done")
                 audio_output_path = current_app.config['UPLOAD_FOLDER'] + "reduced_" + audio_file_name
@@ -122,8 +126,9 @@ def transcribe(audio_file_name, verbose=False):
         return False
 
 
-def reduce_noise(audio, audio_sr, noise_start_time, noise_end_time):
+def  reduce_noise(audio, audio_sr, noise_start_time, noise_end_time):
     audio_noise = nr.get_noise(audio, noise_start_time, noise_end_time, audio_sr)
-    reduced_audio = nr.remove_noise(audio, audio_noise, verbose=True)
+    if len(audio_noise) > 0 and np.max(audio_noise) > 0:
+        audio = nr.remove_noise(audio, audio_noise, verbose=True)
 
-    return reduced_audio
+    return audio
