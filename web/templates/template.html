@@ -2,13 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
     {% if title %}
         <title>{{ title }}</title>
     {% else %}
         <title>Audio Transcribe</title>
     {% endif %}
-
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
     <!-- Font Awesome -->
     <link rel="stylesheet" type="text/css" media="all"
@@ -17,28 +15,26 @@
     <link rel="stylesheet" type="text/css" media="all"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <!-- Animate CSS -->
-    <link rel="stylesheet" type="text/css" media="all" href="{{ url_for('static', filename='css/animate.css') }}"/>
+{#    <link rel="stylesheet" type="text/css" media="all" href="{{ url_for('static', filename='css/animate.css') }}"/>#}
     <!-- Template CSS -->
-    <link rel="stylesheet" type="text/css" media="all" href="{{ url_for('static', filename='css/style.css') }}"/>
-    <link rel="stylesheet" type="text/css" media="all" href="{{ url_for('static', filename='css/custom.css') }}"/>
+    <link rel="stylesheet" type="text/css" media="all"
+          href="{{ url_for('static', filename='css/style.css') }}"/>
+    <link rel="stylesheet" type="text/css" media="all"
+          href="{{ url_for('static', filename='css/custom.css') }}"/>
     <!-- Responsive CSS -->
-    <link rel="stylesheet" type="text/css" media="all" href="{{ url_for('static', filename='css/respons.css') }}"/>
+    <link rel="stylesheet" type="text/css" media="all"
+          href="{{ url_for('static', filename='css/respons.css') }}"/>
     <!-- Favicons -->
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}"/>
+    <link rel="shortcut icon"
+          href="{{ url_for('static', filename='favicon.png') }}"/>
     <!-- Google Fonts -->
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Titillium+Web:300,700,900"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Titillium+Web:300,700,900"/>
     <link rel="stylesheet" type="text/css"
           href="https://fonts.googleapis.com/css?family=Raleway:400,100,100italic,200,200italic,300,300italic,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic"/>
 </head>
 <body>
-<!-- Load page -->
-<div class="animationload">
-    <div class="loader"></div>
-</div>
-<!-- End load page -->
-
 <div id="wraper" style="border-radius: 20px">
-
     <!-- Start Head section -->
     <header class="head">
         <!-- start container -->
@@ -85,39 +81,38 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-lg-2"></div>
                 <div class="col-xs-12 col-sm-12 col-lg-8">
-                    <!-- start row -->
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-lg-12 progress-step">
-                            <!--- start progress step --->
-                            <div class="multi-step" id="step-progress">
-                                <ul class="multi-step-list checked">
-                                    <li class="multi-step-item current" name="step-upload">
-                                        <div class="item-wrap">
-                                            <p class="item-title">Upload</p>
-                                        </div>
-                                    </li>
-                                    <li class="multi-step-item" name="step-processing">
-                                        <div class="item-wrap">
-                                            <p class="item-title">Processing</p>
-                                        </div>
-                                    </li>
-                                    <li class="multi-step-item" name="step-transcript">
-                                        <div class="item-wrap">
-                                            <p class="item-title">Transcript</p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <!--- end progress step --->
-                        </div>
-                    </div>
-                    <!-- end row -->
+                    <!--- TEST --->
+{#                    <div class="row">#}
+{#                        <div class="col-xs-12 col-sm-12 col-lg-12 progress-step">#}
+{#                            <!--- start progress step --->#}
+{#                            <div class="multi-step" id="step-progress">#}
+{#                                <ul class="multi-step-list checked">#}
+{#                                    <li class="multi-step-item current" name="step-upload">#}
+{#                                        <div class="item-wrap">#}
+{#                                            <p class="item-title">Upload</p>#}
+{#                                        </div>#}
+{#                                    </li>#}
+{#                                    <li class="multi-step-item" name="step-processing">#}
+{#                                        <div class="item-wrap">#}
+{#                                            <p class="item-title">Processing</p>#}
+{#                                        </div>#}
+{#                                    </li>#}
+{#                                    <li class="multi-step-item" name="step-transcript">#}
+{#                                        <div class="item-wrap">#}
+{#                                            <p class="item-title">Transcript</p>#}
+{#                                        </div>#}
+{#                                    </li>#}
+{#                                </ul>#}
+{#                            </div>#}
+{#                            <!--- end progress step --->#}
+{#                        </div>#}
+{#                    </div>#}
+                    <!--- ENDTEST --->
                     <!--- start content --->
                     <div id="transcribe">
-
                         <!-- start upload -->
                         <div class="block-grey" id="step-upload">
-                            <form class="text-center border border-light p-5" action="http://localhost:5000/upload_file"
+                            <form class="text-center border border-light p-5" action="/upload_file"
                                   method="POST" enctype="multipart/form-data">
                                 <!-- File -->
                                 <div class="input-group mb-4">
@@ -131,32 +126,17 @@
                             </form>
                         </div>
                         <!-- end upload -->
-
-                        <!-- start processing -->
-                        <div class="block-grey scrollbar" id="step-processing">
-
-                        </div>
-                        <!-- end upload -->
-
-                        <!-- start transcript -->
-                        <div class="block-grey scrollbar" id="step-transcript">
-                            <table>
-                                {% for word in generated_dialogue %}
-                                    <tr>
-                                        <td>{{ word['timestamp'] }}</td>
-                                        {% if word['pembicara'] == 1 %}
-                                            <td class="font-weight-m width-td">Pembicara 1</td>
-                                        {% else %}
-                                            <td class="font-weight-m width-td">Pembicara 2</td>
-                                        {% endif %}
-                                        <td>{{ word['sentence'] }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                        <!-- end transcript -->
                     </div>
                     <!--- end content --->
+                    <!--- TEST --->
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-lg-12">
+                            <div class="result-t" id="result-t">
+
+                            </div>
+                        </div>
+                    </div>
+                    <!--- ENDTEST --->
                 </div>
                 <div class="col-xs-12 col-sm-12 col-lg-2"></div>
             </div>
@@ -169,20 +149,42 @@
 <!-- Libs Script -->
 <script src="{{ url_for('static', filename='js/jquery-1.11.2.min.js') }}" type="text/javascript"></script>
 <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" type="text/javascript"></script>
-<script src="{{ url_for('static', filename='js/dropzone.min.js') }}" type="text/javascript"></script>
+{#<script src="{{ url_for('static', filename='js/dropzone.min.js') }}" type="text/javascript"></script>#}
 
 <!-- Template Script -->
-<script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-<script type="text/javascript">
-    $('#transcribe > div').hide();
-    $('#step-upload').show();
-    $('.multi-step > .multi-step-list > .multi-step-item').click(function () {
-        var showThis = $(this).attr('name');
-        $('.current').removeClass('current');
-        $(this).addClass('current');
-        $('#transcribe > div').hide();
-        $('#' + showThis).show();
-        return false;
+{#<script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js') }}"></script>#}
+<script>
+    $(document).ready(function () {
+        var file_name = "{{ filename }}";
+        var step = "{{ step }}";
+        var result_data;
+        var html_code = "";
+
+        if (step !== '' && step === 'upload') console.log('Uploading Audio, Please Wait');
+        if (step !== '' && step === 'process_audio') {
+            console.log('Process Audio, Please Wait');
+            $.post('/process', {filename: file_name})
+                .done(function (result) {
+                    result_data = result;
+                    if (result_data['status'] === 200) {
+                        $.each(result_data['data'], function (index, data) {
+                            html_code += "<dl class=\"row\">";
+                            html_code += "<dt class=\"col-sm-2\">";
+                            html_code += "[" + data['timestamp'] + "] ";
+                            html_code += "</dt>";
+                            html_code += "<dt class=\"col-sm-2\">";
+                            html_code += ((data['pembicara'] === 1) ? "Pembicara 1: " : "Pembicara 2: ");
+                            html_code += "</dt>";
+                            html_code += "<dt class=\"col-sm-8\">";
+                            html_code += data['sentence'];
+                            html_code += "</dt>";
+                            html_code += "</dl>";
+                            jQuery("#result-t").append(html_code);
+                            html_code = "";
+                        });
+                    }
+                });
+        }
     });
 </script>
 </body>

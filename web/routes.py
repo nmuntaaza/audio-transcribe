@@ -6,9 +6,9 @@ from web import utils
 from web.transcribe import transcribe
 
 
-@web.route('/test', methods=['GET'])
-def test():
-    return render_template('test.html', title="Audio Transcribe", step='upload')
+# @web.route('/test', methods=['GET'])
+# def test():
+#     return render_template('test.html', title="Audio Transcribe", step='upload')
 
 
 @web.route('/')
@@ -84,8 +84,8 @@ def upload_file():
         utils.create_folder_if_not_exist(os.path.join(web.config['UPLOAD_FOLDER']))
         filename = secure_filename(file.filename)
         file.save(os.path.join(web.config['UPLOAD_FOLDER'], filename))
-        # return render_template('template.html', title='Audio Transcribe', step='process_audio', filename=filename)
-        return render_template('test.html', title='Audio Transcribe', step='process_audio', filename=filename)
+        return render_template('template.html', title='Audio Transcribe', step='process_audio', filename=filename)
+        # return render_template('test.html', title='Audio Transcribe', step='process_audio', filename=filename)
 
 
 @web.route('/get_session', methods=['GET'])
