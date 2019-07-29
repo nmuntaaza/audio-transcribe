@@ -18,11 +18,11 @@ def clear_folder(folder_name):
     """
     for file in os.listdir(folder_name):
         file_path = os.path.join(folder_name, file)
+        print(file_path)
         try:
-            return remove_file(file_path)
+            remove_file(file_path)
         except OSError as e:
             print(f"Error: {e.filename} - {e.strerror}")
-            return False
 
 
 def remove_file(path):
@@ -42,10 +42,8 @@ def remove_file(path):
     """
     try:
         os.unlink(path)
-        return True
     except OSError as e:
         print(f"Error: {e.filename} - {e.strerror}")
-        return False
 
 
 def read_audio_binary(path):

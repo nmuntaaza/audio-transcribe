@@ -2,157 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% if title %}
         <title>{{ title }}</title>
     {% else %}
         <title>Audio Transcribe</title>
     {% endif %}
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
     <!-- Font Awesome -->
-    <link rel="stylesheet" type="text/css" media="all"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css"/>
-    <!-- Libs CSS -->
-    <link rel="stylesheet" type="text/css" media="all"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <!-- Animate CSS -->
-{#    <link rel="stylesheet" type="text/css" media="all" href="{{ url_for('static', filename='css/animate.css') }}"/>#}
-    <!-- Template CSS -->
-    <link rel="stylesheet" type="text/css" media="all"
-          href="{{ url_for('static', filename='css/style.css') }}"/>
-    <link rel="stylesheet" type="text/css" media="all"
-          href="{{ url_for('static', filename='css/custom.css') }}"/>
-    <!-- Responsive CSS -->
-    <link rel="stylesheet" type="text/css" media="all"
-          href="{{ url_for('static', filename='css/respons.css') }}"/>
-    <!-- Favicons -->
-    <link rel="shortcut icon"
-          href="{{ url_for('static', filename='favicon.png') }}"/>
-    <!-- Google Fonts -->
-    <link rel="stylesheet" type="text/css"
-          href="https://fonts.googleapis.com/css?family=Titillium+Web:300,700,900"/>
-    <link rel="stylesheet" type="text/css"
-          href="https://fonts.googleapis.com/css?family=Raleway:400,100,100italic,200,200italic,300,300italic,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.5/css/mdb.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ url_for('static', filename='css/simple.css') }}">
 </head>
 <body>
-<div id="wraper" style="border-radius: 20px">
-    <!-- Start Head section -->
-    <header class="head">
-        <!-- start container -->
-        <div class="container">
-            <!-- start row -->
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-lg-12">
-                    <img class="logo-page" src="{{ url_for('static', filename='logo70x70.png') }}" alt="KoTA108">
-                    <!-- Title Page -->
-                    <h2 class="title">Audio Transcribe</h2>
-                    <!-- Description Page -->
-                    <h4 class="sub-title">Tugas Akhir 2019</h4>
-                </div>
-            </div>
-            <!-- end row -->
-        </div>
-        <!-- end container -->
-    </header>
-    <!-- End Head section -->
-
-    <!-- Start Content section -->
-    <footer class="footer">
-        <!-- start container -->
-        <div class="container">
-            <!-- start row -->
-            <div class="row">
-                <!-- start Copyright -->
-                <div class="col-xs-12 col-sm-12 col-lg-12 text-center">
-                    <span class="copyright">Copyright © 2019 All right reserved</span>
-                </div>
-                <!-- end Copyright -->
-            </div>
-            <!-- end row -->
-        </div>
-        <!-- end container -->
-    </footer>
-    <!-- End Content section -->
-
-    <!-- Start Footer section -->
-    <section class="content padding-block border-bottom">
-        <!-- start container -->
-        <div class="container">
-            <!-- start row -->
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-lg-2"></div>
-                <div class="col-xs-12 col-sm-12 col-lg-8">
-                    <!--- TEST --->
-{#                    <div class="row">#}
-{#                        <div class="col-xs-12 col-sm-12 col-lg-12 progress-step">#}
-{#                            <!--- start progress step --->#}
-{#                            <div class="multi-step" id="step-progress">#}
-{#                                <ul class="multi-step-list checked">#}
-{#                                    <li class="multi-step-item current" name="step-upload">#}
-{#                                        <div class="item-wrap">#}
-{#                                            <p class="item-title">Upload</p>#}
-{#                                        </div>#}
-{#                                    </li>#}
-{#                                    <li class="multi-step-item" name="step-processing">#}
-{#                                        <div class="item-wrap">#}
-{#                                            <p class="item-title">Processing</p>#}
-{#                                        </div>#}
-{#                                    </li>#}
-{#                                    <li class="multi-step-item" name="step-transcript">#}
-{#                                        <div class="item-wrap">#}
-{#                                            <p class="item-title">Transcript</p>#}
-{#                                        </div>#}
-{#                                    </li>#}
-{#                                </ul>#}
-{#                            </div>#}
-{#                            <!--- end progress step --->#}
-{#                        </div>#}
-{#                    </div>#}
-                    <!--- ENDTEST --->
-                    <!--- start content --->
-                    <div id="transcribe">
-                        <!-- start upload -->
-                        <div class="block-grey" id="step-upload">
-                            <form class="text-center border border-light p-5" action="/upload_file"
-                                  method="POST" enctype="multipart/form-data">
-                                <!-- File -->
-                                <div class="input-group mb-4">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" name="file" id="file"
-                                               aria-describedby="input audio">
-                                        <label class="custom-file-label" for="file">Choose file</label>
-                                    </div>
-                                </div>
-                                <button class="btn btn-info btn-block" type="submit" name="submit">Upload</button>
-                            </form>
-                        </div>
-                        <!-- end upload -->
-                    </div>
-                    <!--- end content --->
-                    <!--- TEST --->
+<!-- Image and text -->
+<nav class="navbar navbar-light rgba-white-strong mb-5">
+    <a class="navbar-brand" href="#">
+        <img src="https://i.ibb.co/K6mkYM6/logo70x70.png" height="30" class="d-inline-block align-top"
+             alt="mdb logo"> Audio Transcribe
+    </a>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <div class="container">
+                <form class="" action="/upload_file" method="POST" enctype="multipart/form-data">
                     <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-lg-12">
-                            <div class="result-t" id="result-t">
-
+                        <div class="col-sm-9">
+                            <div class='file-input'>
+                                <input type='file' name="file" id="file-upload" aria-describedby="input audio">
+                                <span class='button'>Choose File</span>
+                                <span class='label' id="file-upload-filename">No file selected</span>
                             </div>
                         </div>
+                        <div class="col-sm-2">
+                            <div class='file-input'>
+                                <input type="submit" name="submit" class="bb">
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
                     </div>
-                    <!--- ENDTEST --->
-                </div>
-                <div class="col-xs-12 col-sm-12 col-lg-2"></div>
+                </form>
             </div>
-            <!-- end row -->
+            <div class="overflow-auto mt-3 blue-grey lighten-5 container" style="height: 400px;">
+                <div class="result-t" id="result-t">
+
+                </div>
+            </div>
         </div>
-        <!-- end container -->
-    </section>
+        <div class="col-sm-1"></div>
+    </div>
 </div>
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.5/js/mdb.min.js"></script>
+<script>
+    var input = document.getElementById('file-upload');
+    var infoArea = document.getElementById('file-upload-filename');
 
-<!-- Libs Script -->
-<script src="{{ url_for('static', filename='js/jquery-1.11.2.min.js') }}" type="text/javascript"></script>
-<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" type="text/javascript"></script>
-{#<script src="{{ url_for('static', filename='js/dropzone.min.js') }}" type="text/javascript"></script>#}
-
-<!-- Template Script -->
-{#<script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js') }}"></script>#}
+    input.addEventListener('change', showFileName);
+    function showFileName(event) {
+        var input = event.srcElement;
+        infoArea.textContent = input.files[0].name;
+    }
+</script>
 <script>
     $(document).ready(function () {
         var file_name = "{{ filename }}";
@@ -168,16 +91,16 @@
                     result_data = result;
                     if (result_data['status'] === 200) {
                         $.each(result_data['data'], function (index, data) {
-                            html_code += "<dl class=\"row\">";
-                            html_code += "<dt class=\"col-sm-2\">";
+                            html_code += "<dl class=\"row p-3\">";
+                            html_code += "<dt class=\"col-sm-3\">";
                             html_code += "[" + data['timestamp'] + "] ";
                             html_code += "</dt>";
-                            html_code += "<dt class=\"col-sm-2\">";
+                            html_code += "<dt class=\"col-sm-3\">";
                             html_code += ((data['pembicara'] === 1) ? "Pembicara 1: " : "Pembicara 2: ");
                             html_code += "</dt>";
-                            html_code += "<dt class=\"col-sm-8\">";
+                            html_code += "<dd class=\"col-sm-6\">";
                             html_code += data['sentence'];
-                            html_code += "</dt>";
+                            html_code += "</dd>";
                             html_code += "</dl>";
                             jQuery("#result-t").append(html_code);
                             html_code = "";

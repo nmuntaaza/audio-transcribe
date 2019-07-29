@@ -6,13 +6,8 @@ from web import utils
 from web.transcribe import transcribe
 
 
-# @web.route('/test', methods=['GET'])
-# def test():
-#     return render_template('test.html', title="Audio Transcribe", step='upload')
-
-
 @web.route('/')
-def home():
+def index():
     return render_template('template.html', title='Audio Transcribe', step='upload')
 
 
@@ -23,29 +18,30 @@ def process():
         result = {}
 
         if filename == '':
-            result['status'] = 400
+            result['status'] = 500
             result['message'] = 'Please upload your file first'
             return jsonify(result)
-
         try:
             generated_audio = transcribe.transcribe(filename, verbose=True)
-            if type(generated_audio) is list and isinstance(generated_audio, list):
+            if type(generated_audio) is list and \
+                    isinstance(generated_audio, list) and \
+                    generated_audio is not None:
                 result['status'] = 200
                 result['message'] = 'Processing success'
                 result['data'] = generated_audio
-                return jsonify(result)
             else:
-                result['status'] = 400
+                result['status'] = 500
                 result['message'] = 'Processing failed'
-                return jsonify(result)
+
+            return jsonify(result)
         except Exception as e:
             print(e)
-            result['status'] = 400
+            result['status'] = 500
             result['message'] = 'Processing failed'
             return jsonify(result)
 
 
-# Deprecated
+@DeprecationWarning
 @web.route('/process_audio', methods=['POST'])
 def process_audio():
     if session.get('step') != 'process_audio':
@@ -85,16 +81,14 @@ def upload_file():
         filename = secure_filename(file.filename)
         file.save(os.path.join(web.config['UPLOAD_FOLDER'], filename))
         return render_template('template.html', title='Audio Transcribe', step='process_audio', filename=filename)
-        # return render_template('test.html', title='Audio Transcribe', step='process_audio', filename=filename)
 
 
 @web.route('/get_session', methods=['GET'])
 def get_session():
     if request.method == 'GET':
-        data = {}
-        try:
-            data['step'] = session.get('step')
-            data['filename'] = session.get('filename')
-        except Exception as e:
-            pass
+        data = {
+            "step": session.get('step'),
+            "filename": session.get("filename")
+        }
+
         return jsonify(data)

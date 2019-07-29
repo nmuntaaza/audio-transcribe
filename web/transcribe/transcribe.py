@@ -17,7 +17,7 @@ def transcribe(audio_file_name, verbose=False):
 
     try:
         # Filtering
-        if verbose : print("Filtering:", end=" ")
+        if verbose: print("Filtering:", end=" ")
         p_audio = nr.butter_bandpass_filter(audio, audio_samplerate)
         if verbose:
             print("Done")
@@ -61,8 +61,8 @@ def transcribe(audio_file_name, verbose=False):
         if verbose: print("Done")
 
         if verbose: print("Clearing wav temp:", end=" ")
-        clear_folder = apu.clear_folder(current_app.config['TEMP_FOLDER'])
-        clear_folder = apu.clear_folder(current_app.config['UPLOAD_FOLDER'])
+        apu.clear_folder(current_app.config['TEMP_FOLDER'])
+        apu.clear_folder(current_app.config['UPLOAD_FOLDER'])
         if verbose: print("Done")
 
         bucket_one = f"gs://kota-108/tempfile/{one_temp_filename}.wav"
