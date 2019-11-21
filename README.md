@@ -1,11 +1,18 @@
-# audio-transcribe
+# <img src="web/static/favicon.png" align="left" height="35"/> Audio Transcribe
 Tugas Akhir 2019
 
-## How To Install
-
-- Install Virtual Env Python : https://virtualenv.pypa.io/
-- Install Requirements.txt on Venv : $ pip install -r requirements.txt
-- Install pyAudioAnalysis:
-    * cd libs
-    * cd pyAudioAnalysis
-    * pip install -e .
+## Installation
+* Clone the source of this library:
+    ```
+    git clone https://github.com/mughieams/audio-transcribe.git
+    ```
+* Install depedencies:
+  ```
+  $ pip install -r requirements.txt
+  ```
+* Install pyAudioAnalysis:
+  ```
+  cd libs\
+  cd pyAudioAnalysis\
+  pip install -e .
+  ```
