@@ -1,5 +1,4 @@
 # <img src="web/static/favicon.png" align="left" height="35"/> Audio Transcribe
-Tugas Akhir 2019
 
 ## Installation
 * Clone the source of this library:
